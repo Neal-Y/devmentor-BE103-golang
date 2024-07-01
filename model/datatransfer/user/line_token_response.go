@@ -1,10 +1,4 @@
-package datatransfer
-
-type LineProfileResponse struct {
-	UserID      string `json:"userId"`
-	DisplayName string `json:"displayName"`
-	Email       string `json:"email"`
-}
+package user
 
 type LineTokenResponse struct {
 	AccessToken  string `json:"access_token"`

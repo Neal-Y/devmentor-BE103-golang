@@ -20,6 +20,16 @@ func (b *UserBuilder) WithDisplayName(displayName string) *UserBuilder {
 	return b
 }
 
+func (b *UserBuilder) WithPhone(phone string) *UserBuilder {
+	b.user.Phone = phone
+	return b
+}
+
+func (b *UserBuilder) WithIsMember(isMember bool) *UserBuilder {
+	b.user.IsMember = isMember
+	return b
+}
+
 func (b *UserBuilder) WithEmail(email string) *UserBuilder {
 	b.user.Email = email
 	return b

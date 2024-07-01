@@ -3,14 +3,14 @@ package product
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"shopping-cart/model/datatransfer"
+	"shopping-cart/model/datatransfer/product"
 	"shopping-cart/util"
 )
 
 func (h *Product) UpdateProduct(c *gin.Context) {
 	id, _ := util.GetIDFromPath(c, "id")
 
-	var productDto datatransfer.ProductUpdate
+	var productDto product.Update
 
 	err := c.ShouldBindJSON(&productDto)
 	if err != nil {

@@ -12,6 +12,8 @@ type UserRepository interface {
 	Update(user *database.User) error
 	Delete(user *database.User) error
 	FindByLineID(lineID string) (*database.User, error)
+	DeleteTx(tx *gorm.DB, id int) error
+	BeginTransaction() *gorm.DB
 }
 
 type userRepository struct {
@@ -52,4 +54,17 @@ func (r *userRepository) FindByLineID(lineID string) (*database.User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userRepository) DeleteTx(tx *gorm.DB, id int) error {
+	var user database.User
+	err := tx.First(&user, id).Error
+	if err != nil {
+		return err
+	}
+	return tx.Delete(&user).Error
+}
+
+func (r *userRepository) BeginTransaction() *gorm.DB {
+	return r.db.Begin()
 }
