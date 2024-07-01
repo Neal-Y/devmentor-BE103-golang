@@ -6,17 +6,12 @@ import (
 	"shopping-cart/config"
 	"shopping-cart/constant"
 	"shopping-cart/model/database"
-	"shopping-cart/model/datatransfer"
+	"shopping-cart/model/datatransfer/user"
 	"shopping-cart/repository"
 	"shopping-cart/util"
 )
 
 type UserService interface {
-	CreateUser(user *database.User) error
-	GetUserByID(id int) (*database.User, error)
-	UpdateUser(user *database.User) error
-	DeleteUser(user *database.User) error
-	FindByLineID(lineID string) (*database.User, error)
 	SaveOrUpdateUser(user *database.User) error
 	ExchangeTokenAndGetProfile(code string) (*database.User, error)
 }
@@ -29,26 +24,6 @@ func NewUserService(repo repository.UserRepository) UserService {
 	return &userService{repo: repo}
 }
 
-func (s *userService) CreateUser(user *database.User) error {
-	return s.repo.Create(user)
-}
-
-func (s *userService) GetUserByID(id int) (*database.User, error) {
-	return s.repo.FindByID(id)
-}
-
-func (s *userService) UpdateUser(user *database.User) error {
-	return s.repo.Update(user)
-}
-
-func (s *userService) DeleteUser(user *database.User) error {
-	return s.repo.Delete(user)
-}
-
-func (s *userService) FindByLineID(lineID string) (*database.User, error) {
-	return s.repo.FindByLineID(lineID)
-}
-
 func (s *userService) SaveOrUpdateUser(user *database.User) error {
 	existingUser, err := s.repo.FindByLineID(user.LineID)
 	if err != nil {
@@ -59,8 +34,8 @@ func (s *userService) SaveOrUpdateUser(user *database.User) error {
 }
 
 func (s *userService) ExchangeTokenAndGetProfile(code string) (*database.User, error) {
-	var tokenData *datatransfer.LineTokenResponse
-	httpBuilder := builder.NewHttpClient[*datatransfer.LineTokenResponse]()
+	var tokenData *user.LineTokenResponse
+	httpBuilder := builder.NewHttpClient[*user.LineTokenResponse]()
 
 	err := httpBuilder.
 		WithMethodPost().
@@ -80,7 +55,7 @@ func (s *userService) ExchangeTokenAndGetProfile(code string) (*database.User, e
 		return nil, fmt.Errorf("failed to parse access token")
 	}
 
-	var profileData *datatransfer.LineProfileResponse
+	var profileData *user.LineProfileResponse
 	profileData, err = util.ParseIDToken(tokenData.IDToken)
 	if err != nil {
 		return nil, err

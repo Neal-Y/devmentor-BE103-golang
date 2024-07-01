@@ -12,13 +12,13 @@ type Authorization struct {
 }
 
 func NewAuthorization(r *gin.RouterGroup) *Authorization {
-	h := &Authorization{}
-
 	userRepo := repository.NewUserRepository()
 
 	userService := service.NewUserService(userRepo)
 
-	h.service = userService
+	h := &Authorization{
+		service: userService,
+	}
 
 	newRoute(h, r)
 
