@@ -6,7 +6,7 @@ import (
 	"shopping-cart/config"
 	"shopping-cart/constant"
 	"shopping-cart/model/database"
-	"shopping-cart/model/datatransfer"
+	"shopping-cart/model/datatransfer/user"
 	"shopping-cart/repository"
 	"shopping-cart/util"
 )
@@ -59,8 +59,8 @@ func (s *userService) SaveOrUpdateUser(user *database.User) error {
 }
 
 func (s *userService) ExchangeTokenAndGetProfile(code string) (*database.User, error) {
-	var tokenData *datatransfer.LineTokenResponse
-	httpBuilder := builder.NewHttpClient[*datatransfer.LineTokenResponse]()
+	var tokenData *user.LineTokenResponse
+	httpBuilder := builder.NewHttpClient[*user.LineTokenResponse]()
 
 	err := httpBuilder.
 		WithMethodPost().
@@ -80,7 +80,7 @@ func (s *userService) ExchangeTokenAndGetProfile(code string) (*database.User, e
 		return nil, fmt.Errorf("failed to parse access token")
 	}
 
-	var profileData *datatransfer.LineProfileResponse
+	var profileData *user.LineProfileResponse
 	profileData, err = util.ParseIDToken(tokenData.IDToken)
 	if err != nil {
 		return nil, err

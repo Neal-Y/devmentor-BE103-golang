@@ -3,14 +3,14 @@ package service
 import (
 	"errors"
 	"shopping-cart/model/database"
-	"shopping-cart/model/datatransfer"
+	"shopping-cart/model/datatransfer/product"
 	"shopping-cart/repository"
 	"time"
 )
 
 type ProductService interface {
-	UpdateProduct(id int, productDto *datatransfer.ProductUpdate) (*database.Product, error)
-	CreateProduct(productDto *datatransfer.ProductPayload) (*database.Product, error)
+	UpdateProduct(id int, productDto *product.Update) (*database.Product, error)
+	CreateProduct(productDto *product.Payload) (*database.Product, error)
 	DeleteProduct(id int) error
 	FindAllProducts() ([]database.Product, error)
 	FindByID(id int) (*database.Product, error)
@@ -26,7 +26,7 @@ func NewProductService(repo repository.ProductRepository) ProductService {
 	}
 }
 
-func (s *productService) UpdateProduct(id int, productDto *datatransfer.ProductUpdate) (*database.Product, error) {
+func (s *productService) UpdateProduct(id int, productDto *product.Update) (*database.Product, error) {
 	product, err := s.productRepo.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (s *productService) UpdateProduct(id int, productDto *datatransfer.ProductU
 	return product, nil
 }
 
-func (s *productService) CreateProduct(productDto *datatransfer.ProductPayload) (*database.Product, error) {
+func (s *productService) CreateProduct(productDto *product.Payload) (*database.Product, error) {
 	var check database.Product
 	err := s.productRepo.FindByName(productDto.Name, &check)
 	if err == nil {

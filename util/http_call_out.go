@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"net/http"
 	"shopping-cart/config"
-	"shopping-cart/model/datatransfer"
+	"shopping-cart/model/datatransfer/user"
 	"strconv"
 )
 
@@ -29,7 +29,7 @@ func GetIDFromPath(c *gin.Context, paramName string) (int, error) {
 	return id, nil
 }
 
-func ParseIDToken(idToken string) (*datatransfer.LineProfileResponse, error) {
+func ParseIDToken(idToken string) (*user.LineProfileResponse, error) {
 	token, err := jwt.Parse(idToken, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
@@ -44,7 +44,7 @@ func ParseIDToken(idToken string) (*datatransfer.LineProfileResponse, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		profileData := &datatransfer.LineProfileResponse{
+		profileData := &user.LineProfileResponse{
 			UserID:      claims["sub"].(string),
 			DisplayName: claims["name"].(string),
 			Email:       claims["email"].(string),

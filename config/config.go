@@ -11,6 +11,7 @@ type Config struct {
 	LineClientSecret string
 	NgrokURL         string
 	LineRedirectURI  string
+	Secret           string
 }
 
 var AppConfig Config
@@ -28,5 +29,6 @@ func LoadConfig() {
 		LineClientSecret: viper.GetString("LINE_CLIENT_SECRET"),
 		NgrokURL:         viper.GetString("NGROK_URL"),
 		LineRedirectURI:  viper.GetString("NGROK_URL") + "/api/line/callback",
+		Secret:           viper.GetString("SECRET"),
 	}
 }
